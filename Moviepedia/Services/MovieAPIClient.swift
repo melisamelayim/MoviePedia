@@ -15,18 +15,36 @@ class MovieAPIClient: MovieService {
     static let sharedInstance = MovieAPIClient()
     private init() {}
     
-    private let apiKey = "f5560e20236e0f9ffb9045c13db964ac"
+    private lazy var apiKey: String = {
+        getAPIKey()
+    }()
+    
     private let baseAPIURL = "https://api.themoviedb.org/3"
     private let apiURLSession = URLSession.shared
     private let apiJSONDecoder = Utils.customJSONDecoder
+        
+    func getAPIKey() -> String {
+        guard let path = Bundle.main.path(forResource: "secrets", ofType: "plist"),
+              let dictionary = NSDictionary(contentsOfFile: path) as? [String: Any],
+              let apiKey = dictionary["API_KEY"] as? String else {
+            fatalError("API key not found in secrets.plist")
+        }
+        return apiKey
+    }
     
     func fetchMovies(from endpoint: MovieListEndpoint) async throws -> [Movie] {
-        print("API çağrısı başlatılıyor: \(endpoint.rawValue)")
+        print("Starting API call \(endpoint.rawValue)") // ugly debug
         guard let url = URL(string: "\(baseAPIURL)/movie/\(endpoint.rawValue)") else {
             throw MovieError.invalidEndpoint
         }
-        let movieResponse: MovieResponse = try await self.loadURLAndDecode(url: url)
-        print("API çağrısı başarılı: \(endpoint.rawValue), Toplam Film Sayısı: \(movieResponse.results.count)")
+        
+        let params: [String: String] = [
+                "language": "tr-TR",  // gelenekselleştiriyoruz
+                "region": "TR"
+        ]
+        
+        let movieResponse: MovieResponse = try await self.loadURLAndDecode(url: url, params: params)
+        print("API call successful: \(endpoint.rawValue), total number of movies: \(movieResponse.results.count)")
         return movieResponse.results
     }
     
@@ -34,9 +52,14 @@ class MovieAPIClient: MovieService {
         guard let url = URL(string: "\(baseAPIURL)/movie/\(id)") else {
             throw MovieError.invalidEndpoint
         }
-        return try await self.loadURLAndDecode(url: url, params: [
-            "append_to_response": "videos,credits"
-        ])
+        
+        let params: [String: String] = [
+                "append_to_response": "videos,credits",
+                "language": "tr-TR",
+                "region": "TR"
+        ]
+        
+        return try await self.loadURLAndDecode(url: url, params: params)
     }
     
     func searchMovie(query: String) async throws -> [Movie] {
@@ -44,9 +67,9 @@ class MovieAPIClient: MovieService {
             throw MovieError.invalidEndpoint
         }
         let movieResponse: MovieResponse = try await self.loadURLAndDecode(url: url, params: [
-            "language": "en-US",
+            "language": "tr-TR",
             "include_adult": "false",
-            "region": "US",
+            "region": "TR",
             "query": query
         ])
         

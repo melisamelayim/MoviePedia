@@ -6,12 +6,19 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
-struct MoviepediaApp: App {
+struct MovieApp: App {
+    init() {
+        FirebaseApp.configure()
+        let firestoreManager = FirestoreService()
+        firestoreManager.addTestData()
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
     }
 }
+

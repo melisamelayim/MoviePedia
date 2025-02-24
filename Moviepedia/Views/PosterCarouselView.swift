@@ -18,19 +18,18 @@ struct PosterCarouselView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 15) {
                         ForEach(0..<movies.count, id: \.self) { index in
-                            GeometryReader { innerGeometry in
-                                PosterCardView(movie: movies[index])
-                                    .frame(width: 200, height: 300)
-                                    .scaleEffect(getScale(proxy: innerGeometry, geometry: geometry))
-                                    .opacity(getScale(proxy: innerGeometry, geometry: geometry))
-                                    .animation(.spring(), value: getScale(proxy: innerGeometry, geometry: geometry))
-                                    .id(index) 
-                                    .onTapGesture {
-                                        withAnimation(.spring()) {
-                                            currentIndex = index
-                                            scrollProxy.scrollTo(currentIndex, anchor: .center)
-                                        }
-                                    }
+                            NavigationLink(
+                                    destination: MovieDetailView(movieId: movies[index].id, movieTitle: movies[index].title)
+                            ) {
+                                GeometryReader { innerGeometry in
+                                    PosterCardView(movie: movies[index])
+                                        .frame(width: 200, height: 300)
+                                        .scaleEffect(getScale(proxy: innerGeometry, geometry: geometry))
+                                        .opacity(getScale(proxy: innerGeometry, geometry: geometry))
+                                        .animation(.spring(), value: getScale(proxy: innerGeometry, geometry: geometry))
+                                }
+                                .frame(width: 170, height: 300)
+                            
                             }
                             .frame(width: 170, height: 300)
                         }

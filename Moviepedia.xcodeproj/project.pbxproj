@@ -23,10 +23,22 @@
 		50215F1C2D1EC76C00B5BB7A /* search_movie.json in Resources */ = {isa = PBXBuildFile; fileRef = 50215F192D1EC76C00B5BB7A /* search_movie.json */; };
 		50215F1D2D1EC76C00B5BB7A /* movie_info.json in Resources */ = {isa = PBXBuildFile; fileRef = 50215F1A2D1EC76C00B5BB7A /* movie_info.json */; };
 		507474AF2CFE188100D76984 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 507474AE2CFE188100D76984 /* Movie.swift */; };
+		50B4EA262D6D030200C974C9 /* FavoriteButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B4EA252D6D030200C974C9 /* FavoriteButtonView.swift */; };
 		50CC15862D1D75E0007FDFB2 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CC15852D1D75E0007FDFB2 /* ImageLoader.swift */; };
 		50CC158C2D1D889E007FDFB2 /* PosterCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CC158B2D1D889E007FDFB2 /* PosterCardView.swift */; };
 		50CC158E2D1D88AA007FDFB2 /* BackdropCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CC158D2D1D88AA007FDFB2 /* BackdropCardView.swift */; };
 		50CC15902D1E30AA007FDFB2 /* PosterCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50CC158F2D1E30AA007FDFB2 /* PosterCarouselView.swift */; };
+		50CF89682D37066A00C02ED3 /* secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50CF89672D37066A00C02ED3 /* secrets.plist */; };
+		50CF896A2D370DD500C02ED3 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 50CF89692D370DD500C02ED3 /* .gitignore */; };
+		50CF896C2D370E5300C02ED3 /* secrets.template.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50CF896B2D370E5300C02ED3 /* secrets.template.plist */; };
+		50E9CCD02D69FEB500702A99 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 50E9CCCF2D69FEB500702A99 /* FirebaseAuth */; };
+		50E9CCD22D69FEB500702A99 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 50E9CCD12D69FEB500702A99 /* FirebaseFirestore */; };
+		50E9CCD42D6A2A7500702A99 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E9CCD32D6A2A7500702A99 /* FirestoreService.swift */; };
+		50E9CCD62D6A2B8B00702A99 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50E9CCD52D6A2B8B00702A99 /* GoogleService-Info.plist */; };
+		50E9CCD82D6A443B00702A99 /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E9CCD72D6A443B00702A99 /* FavoritesViewModel.swift */; };
+		50FADD072D39C7E30056CD4C /* MovieDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FADD062D39C7E30056CD4C /* MovieDetailView.swift */; };
+		50FADD092D39C8000056CD4C /* MovieDetailState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FADD082D39C8000056CD4C /* MovieDetailState.swift */; };
+		50FADD0C2D39D5710056CD4C /* DataFetchPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FADD0B2D39D5710056CD4C /* DataFetchPhase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,10 +78,20 @@
 		50215F192D1EC76C00B5BB7A /* search_movie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = search_movie.json; sourceTree = "<group>"; };
 		50215F1A2D1EC76C00B5BB7A /* movie_info.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = movie_info.json; sourceTree = "<group>"; };
 		507474AE2CFE188100D76984 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		50B4EA252D6D030200C974C9 /* FavoriteButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteButtonView.swift; sourceTree = "<group>"; };
 		50CC15852D1D75E0007FDFB2 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		50CC158B2D1D889E007FDFB2 /* PosterCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterCardView.swift; sourceTree = "<group>"; };
 		50CC158D2D1D88AA007FDFB2 /* BackdropCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackdropCardView.swift; sourceTree = "<group>"; };
 		50CC158F2D1E30AA007FDFB2 /* PosterCarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterCarouselView.swift; sourceTree = "<group>"; };
+		50CF89672D37066A00C02ED3 /* secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = secrets.plist; sourceTree = "<group>"; };
+		50CF89692D370DD500C02ED3 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		50CF896B2D370E5300C02ED3 /* secrets.template.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = secrets.template.plist; sourceTree = "<group>"; };
+		50E9CCD32D6A2A7500702A99 /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
+		50E9CCD52D6A2B8B00702A99 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		50E9CCD72D6A443B00702A99 /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
+		50FADD062D39C7E30056CD4C /* MovieDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailView.swift; sourceTree = "<group>"; };
+		50FADD082D39C8000056CD4C /* MovieDetailState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailState.swift; sourceTree = "<group>"; };
+		50FADD0B2D39D5710056CD4C /* DataFetchPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetchPhase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +99,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50E9CCD02D69FEB500702A99 /* FirebaseAuth in Frameworks */,
+				50E9CCD22D69FEB500702A99 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +124,7 @@
 		500EF4842D09C740006EBB64 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				50E9CCD32D6A2A7500702A99 /* FirestoreService.swift */,
 				500EF4852D09C756006EBB64 /* MovieService.swift */,
 				500EF4872D09DB9F006EBB64 /* MovieAPIClient.swift */,
 			);
@@ -109,6 +134,10 @@
 		50147E2A2CF8BF4B0045069A = {
 			isa = PBXGroup;
 			children = (
+				50E9CCD52D6A2B8B00702A99 /* GoogleService-Info.plist */,
+				50CF89672D37066A00C02ED3 /* secrets.plist */,
+				50CF89692D370DD500C02ED3 /* .gitignore */,
+				50CF896B2D370E5300C02ED3 /* secrets.template.plist */,
 				50215F172D1EC6E000B5BB7A /* Resources */,
 				50147E352CF8BF4C0045069A /* Moviepedia */,
 				50147E462CF8BF520045069A /* MoviepediaTests */,
@@ -171,8 +200,10 @@
 		50147E602CF8C73E0045069A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				50E9CCD72D6A443B00702A99 /* FavoritesViewModel.swift */,
 				507474AE2CFE188100D76984 /* Movie.swift */,
 				50215F132D1EC10D00B5BB7A /* MockData.swift */,
+				50FADD0B2D39D5710056CD4C /* DataFetchPhase.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -190,10 +221,12 @@
 		50BDD96C2D1208C8004BA750 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				50B4EA252D6D030200C974C9 /* FavoriteButtonView.swift */,
 				50CC158B2D1D889E007FDFB2 /* PosterCardView.swift */,
 				50CC158F2D1E30AA007FDFB2 /* PosterCarouselView.swift */,
 				50CC158D2D1D88AA007FDFB2 /* BackdropCardView.swift */,
 				501DA59F2D21BAB70062F2C2 /* BackdropCarouselView.swift */,
+				50FADD062D39C7E30056CD4C /* MovieDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -202,6 +235,7 @@
 			isa = PBXGroup;
 			children = (
 				50CC15852D1D75E0007FDFB2 /* ImageLoader.swift */,
+				50FADD082D39C8000056CD4C /* MovieDetailState.swift */,
 			);
 			path = Bindings;
 			sourceTree = "<group>";
@@ -222,6 +256,10 @@
 			dependencies = (
 			);
 			name = Moviepedia;
+			packageProductDependencies = (
+				50E9CCCF2D69FEB500702A99 /* FirebaseAuth */,
+				50E9CCD12D69FEB500702A99 /* FirebaseFirestore */,
+			);
 			productName = Moviepedia;
 			productReference = 50147E332CF8BF4C0045069A /* Moviepedia.app */;
 			productType = "com.apple.product-type.application";
@@ -294,6 +332,9 @@
 				Base,
 			);
 			mainGroup = 50147E2A2CF8BF4B0045069A;
+			packageReferences = (
+				50E9CCCE2D69FEB500702A99 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 50147E342CF8BF4C0045069A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -311,7 +352,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				50147E3E2CF8BF510045069A /* Preview Assets.xcassets in Resources */,
+				50CF896A2D370DD500C02ED3 /* .gitignore in Resources */,
+				50E9CCD62D6A2B8B00702A99 /* GoogleService-Info.plist in Resources */,
 				50215F1D2D1EC76C00B5BB7A /* movie_info.json in Resources */,
+				50CF896C2D370E5300C02ED3 /* secrets.template.plist in Resources */,
+				50CF89682D37066A00C02ED3 /* secrets.plist in Resources */,
 				50215F1B2D1EC76C00B5BB7A /* movie_list.json in Resources */,
 				50215F1C2D1EC76C00B5BB7A /* search_movie.json in Resources */,
 				50147E3B2CF8BF510045069A /* Assets.xcassets in Resources */,
@@ -339,13 +384,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50FADD0C2D39D5710056CD4C /* DataFetchPhase.swift in Sources */,
 				50147E392CF8BF4C0045069A /* ContentView.swift in Sources */,
 				50CC158C2D1D889E007FDFB2 /* PosterCardView.swift in Sources */,
 				50CC158E2D1D88AA007FDFB2 /* BackdropCardView.swift in Sources */,
+				50B4EA262D6D030200C974C9 /* FavoriteButtonView.swift in Sources */,
 				500EF4862D09C756006EBB64 /* MovieService.swift in Sources */,
+				50E9CCD42D6A2A7500702A99 /* FirestoreService.swift in Sources */,
 				50147E372CF8BF4C0045069A /* MoviepediaApp.swift in Sources */,
+				50E9CCD82D6A443B00702A99 /* FavoritesViewModel.swift in Sources */,
 				500EF4882D09DB9F006EBB64 /* MovieAPIClient.swift in Sources */,
 				507474AF2CFE188100D76984 /* Movie.swift in Sources */,
+				50FADD092D39C8000056CD4C /* MovieDetailState.swift in Sources */,
+				50FADD072D39C7E30056CD4C /* MovieDetailView.swift in Sources */,
 				50CC15902D1E30AA007FDFB2 /* PosterCarouselView.swift in Sources */,
 				501DA5A02D21BAB80062F2C2 /* BackdropCarouselView.swift in Sources */,
 				50CC15862D1D75E0007FDFB2 /* ImageLoader.swift in Sources */,
@@ -680,6 +731,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		50E9CCCE2D69FEB500702A99 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		50E9CCCF2D69FEB500702A99 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50E9CCCE2D69FEB500702A99 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		50E9CCD12D69FEB500702A99 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 50E9CCCE2D69FEB500702A99 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 50147E2B2CF8BF4B0045069A /* Project object */;
 }

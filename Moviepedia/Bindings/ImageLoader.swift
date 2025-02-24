@@ -41,3 +41,14 @@ class ImageLoader: ObservableObject {
         }
     }
 }
+
+class MovieCache {
+    static let shared = MovieCache() // Singleton instance
+    private init() {} // Harici instance oluşmasını engelle
+    
+    var nowPlayingMovies: [Movie] = []
+    var popularMovies: [Movie] = []
+    var upcomingMovies: [Movie] = []
+
+    
+}

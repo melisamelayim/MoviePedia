@@ -23,6 +23,10 @@ struct BackdropCardView: View {
                     .frame(width: UIScreen.main.bounds.width * 0.8, height: 175)
                     .cornerRadius(12)
                     .clipped()
+                Text(movie.title)
+                    .font(.headline)
+                    .foregroundColor(.black)
+                    .padding(.top, 200)
             } else {
                 Color.gray.opacity(0.3)
                     .frame(width: UIScreen.main.bounds.width * 0.85, height: 200)
