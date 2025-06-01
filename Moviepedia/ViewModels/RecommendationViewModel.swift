@@ -7,34 +7,41 @@
 
 import SwiftUI
 import FirebaseFirestore
+import FirebaseAuth
 
+@MainActor
 class RecommendationViewModel: ObservableObject {
-    @Published var recommendedMovies: [RecommendedMovie] = []
-    
+    @Published var recommendedMovies: [DisplayMovie] = []
+
     private let db = Firestore.firestore()
-    
-    func fetchRecommendations(for userId: String) {
+
+    func fetchRecommendations() async {
+        guard let userId = AuthService.shared.currentUserId() else {
+            print("Kullanıcı yok, öneriler çekilemedi")
+            return
+        }
+
         let ref = db.collection("users").document(userId).collection("recommendations")
-        
-        ref.getDocuments { snapshot, error in
-            guard let docs = snapshot?.documents, error == nil else {
-                print("firestore error")
-                return
-            }
-                
-            self.recommendedMovies = docs.compactMap { doc in
+
+        do {
+            let snapshot = try await ref.getDocuments()
+            let movies: [DisplayMovie] = snapshot.documents.compactMap { doc in
                 let data = doc.data()
                 guard
                     let title = data["title"] as? String,
-                    let posterPath = data["posterPath"] as? String,
-                    let score = data["score"] as? Double,
-                    let id = Int(doc.documentID)
+                    let posterPath = data["posterPath"] as? String
                 else { return nil }
-                
-                return RecommendedMovie(id: id, title: title, posterPath: posterPath, score: score)
+
+                return DisplayMovie(
+                    id: Int(doc.documentID) ?? -1,
+                    title: title,
+                    posterPath: posterPath
+                )
             }
-            .sorted { $0.score > $1.score }
+            self.recommendedMovies = movies
+        } catch {
+            print("Firestore öneri çekme hatası: \(error.localizedDescription)")
         }
     }
-    
 }
+

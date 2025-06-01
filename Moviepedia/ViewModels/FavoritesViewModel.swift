@@ -6,46 +6,127 @@
 //
 
 import FirebaseFirestore
-import SwiftUI
 import FirebaseAuth
+import SwiftUI
+import Combine
 
 class FavoritesViewModel: ObservableObject { // used observableobject so views are automatically triggered when changes happen
-    private let db = Firestore.firestore() // created an instance to access the firestore db, which is only accessable from here in this class, not anywhere else. also, this is only the referance, like, the connection variable. therefore, even tho we keep updating the db with data, out connection path is never going to change, that's why we use "let". so "db" is just a short-cut for that path.
+    @Published private(set) var favoriteMovies: Set<Int> = []
+    @Published private(set) var watchlistMovies: Set<Int> = []
     
-    @Published var favoriteMovies: [String] {
-        didSet{
-            UserDefaults.standard.set(favoriteMovies, forKey: "favoriteMovies")
-        } // what that means is that, everytime favoriteMovies array gets triggered, this code will execute immediately after the change. in our case, it saves the updated array to userdefaults.
+    @Published var needsRefresh = false
+    
+    private let db = Firestore.firestore() // created an instance to access the firestore db, which is only accessable from here in this class, not anywhere else. also, this is only the referance, like, the connection variable. therefore, even tho we keep updating the db with data, out connection path is never going to change, that's why we use "let". so "db" is just a short-cut for that path.
+   
+    func toggleFavorite(movieId: Int) {
+        if favoriteMovies.contains(movieId) {
+            favoriteMovies.remove(movieId)
+        } else {
+            favoriteMovies.insert(movieId)
+        }
+        updateFirestoreArray(for: "favorites", movieId: movieId, isAdding: favoriteMovies.contains(movieId))
+        needsRefresh = true
     }
     
-    init() {
-        self.favoriteMovies = UserDefaults.standard.stringArray(forKey: "favoriteMovies") ?? []
-    } // whenever an object (from this class) is created, it wil initially bring the fav movies array from the local memory
+    func toggleWatchlist(movieId: Int) {
+        if watchlistMovies.contains(movieId) {
+            watchlistMovies.remove(movieId)
+        } else {
+            watchlistMovies.insert(movieId)
+        }
+        updateFirestoreArray(for: "watchlist", movieId: movieId, isAdding: watchlistMovies.contains(movieId))
+        needsRefresh = true
+    }
     
-    
-    func toggleFavorite(movieId: String) {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
+    private func updateFirestoreArray(for field: String, movieId: Int, isAdding: Bool) {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("user not logged in")
+            return
+        }
+        let ref = db.collection("users").document(userId)
         
-        let userDataRef = db.collection("users").document(userId) // reaching spesific users db collection
+        let operation: [String: Any] = isAdding
+        ? [field: FieldValue.arrayUnion([movieId])]
+        : [field: FieldValue.arrayRemove([movieId])]
+        
+        ref.setData(operation, merge: true) { error in
+            if let error = error {
+                print("firestore update error: \(error.localizedDescription)")
+            } else {
+                print("firestore '\(field)' updated for movie \(movieId)")
+            }
+        }
+    }
+    
+    func isFavorite(movieId: Int) -> Bool {
+        favoriteMovies.contains(movieId)
+    }
 
-        let updateValue: [String: Any] = favoriteMovies.contains(movieId) ? // clean. code.
-            ["favorites": FieldValue.arrayRemove([movieId])] :
-            ["favorites": FieldValue.arrayUnion([movieId])]
+    func isInWatchlist(movieId: Int) -> Bool {
+        watchlistMovies.contains(movieId)
+    }
+    
+    
+    func fetchFavorites() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("kullanıcı yok")
+            return
+        }
 
-        userDataRef.setData(updateValue, merge: true) { error in
-            if error == nil {
+        print("📡 fetchFavorites çağrıldı")
+
+        let ref = db.collection("users").document(userId)
+        ref.getDocument { snapshot, error in
+            if let error = error {
+                print("firestore favorites read error: \(error.localizedDescription)")
+                return
+            }
+
+            if let data = snapshot?.data(),
+               let ids = data["favorites"] as? [Int] {
                 DispatchQueue.main.async {
-                    if self.favoriteMovies.contains(movieId) {
-                        self.favoriteMovies.removeAll { $0 == movieId }
-                    } else {
-                        self.favoriteMovies.append(movieId)
-                    }
+                    self.favoriteMovies = Set(ids)
+                    print("favoriler geldi: \(ids.count) film")
                 }
+            } else {
+                print("favoriler boş")
             }
         }
     }
 
 
+    func fetchWatchlist() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("kullanıcı yok")
+            return
+        }
+
+        print("fetchWatchlist çağrıldı")
+
+        let ref = db.collection("users").document(userId)
+        ref.getDocument { snapshot, error in
+            if let error = error {
+                print("firestore watchlist read error: \(error.localizedDescription)")
+                return
+            }
+
+            if let data = snapshot?.data(),
+               let ids = data["watchlist"] as? [Int] {
+                DispatchQueue.main.async {
+                    self.watchlistMovies = Set(ids)
+                    print("watchlist geldi: \(ids.count) film")
+                }
+            } else {
+                print("watchlist boş")
+            }
+        }
+    }
+
     
+    
+    func fetchAll() {
+        fetchFavorites()
+        fetchWatchlist()
+    }
     
 }

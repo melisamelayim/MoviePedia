@@ -1,42 +1,30 @@
 //
-//  ContentView.swift
+//  HomeView.swift
 //  Moviepedia
 //
-//  Created by Max on 28.11.2024.
+//  Created by Missy on 22.05.2025.
 //
-
-// favorites & auth, search optimization later.
 
 import SwiftUI
 
-struct ContentView: View {
-    @StateObject private var userMovieState = UserMovieState()
+struct HomeView: View {
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
     @StateObject private var recommendationVM = RecommendationViewModel()
-    
-    private let userId = "user123"
-    
+        
     @State private var moviesNowPlaying: [Movie] = []
     @State private var moviesPopular: [Movie] = []
     @State private var moviesUpcoming: [Movie] = []
     
     @State private var useMockData = false // mock data toggle
     @State private var isLoading = true
-    
-    init() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor.white
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
-        UINavigationBar.appearance().standardAppearance = appearance
-        UINavigationBar.appearance().scrollEdgeAppearance = appearance
-    }
+    @State private var hasAppeared = false
     
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 10) {
                     if isLoading {
-                        ProgressView("Loading...")
+                        ProgressView("Yükleniyor...")
                             .frame(maxWidth: .infinity)
                             .padding()
                     } else {
@@ -48,63 +36,43 @@ struct ContentView: View {
                                     .padding(.horizontal, 20)
                                     .padding(.top, 10)
                                 
-                                PosterCarouselView(
-                                    items: recommendationVM.recommendedMovies.map { .recommended($0) }, userMovieState: userMovieState
-                                )
-                                .padding(.top, -10)
+                                BackdropCarouselView(movies: recommendationVM.recommendedMovies)
+                                
+                                    .padding(.top, -10)
                             }
                         }
                         
-                        HStack{
-                            Text("Vizyonda")
-                                .font(.title)
-                                .bold()
-                                .padding(.horizontal, 20)
-                                .padding(.top, 25)
+                        Text("Vizyonda")
+                            .font(.title)
+                            .bold()
+                            .padding(.horizontal, 20)
+                            .padding(.top, 10)
+                        
+                        PosterCarouselView(movies: moviesNowPlaying)
                             
-                            Button(action: {
-                                Task {
-                                    MovieCache.shared.nowPlayingMovies = []
-                                    MovieCache.shared.popularMovies = []
-                                    MovieCache.shared.upcomingMovies = []
-                                    await loadMovies()
-                                }
-                            }) {
-                                Text("Yenile")
-                                    .foregroundColor(.blue)
-                                    .padding(10)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .stroke(Color.blue, lineWidth: 2)
-                                    )
-                                    .padding(.horizontal, 10)
-                                    .padding(.top, 25)
-                            }
-                        }
                         
-                        PosterCarouselView(
-                            items: moviesNowPlaying.map { .movie($0) },
-                            userMovieState: userMovieState
-                        )
-                            .padding(.top, -25)
                         
                         Text("Popüler")
                             .font(.title)
                             .bold()
-                            .padding(.top, -15)
                             .padding(.horizontal, 20)
+                            .padding(.top, -85)
                             
-                        BackdropCarouselView(movies: moviesPopular)
-                            .padding(.top, -25)
+                        
+                        PosterCarouselView(movies: moviesPopular)
+                            .padding(.top, -50)
+                        
+                        
                         
                         Text("Yakında")
                             .font(.title)
                             .bold()
-                            .padding(.top, -80)
+                            .padding(.top, -85)
                             .padding(.horizontal, 20)
-
-                        BackdropCarouselView(movies: moviesUpcoming)
-                            .padding(.top, -70)
+                        
+                        PosterCarouselView(movies: moviesUpcoming)
+                            .padding(.top, -50)
+                        
                     }
                     
                 }
@@ -112,6 +80,13 @@ struct ContentView: View {
             .background(Color.pink.opacity(0.2).edgesIgnoringSafeArea(.all))
             .navigationTitle("Moviepedia")
             .onAppear {
+                let appearance = UINavigationBarAppearance()
+                appearance.configureWithTransparentBackground()
+                appearance.backgroundColor = UIColor.white
+                appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+                UINavigationBar.appearance().standardAppearance = appearance
+                UINavigationBar.appearance().scrollEdgeAppearance = appearance
+                
                 if useMockData {
                     loadMockData()
                 } else {
@@ -119,8 +94,24 @@ struct ContentView: View {
                         await loadMovies()
                     }
                 }
-                recommendationVM.fetchRecommendations(for: userId)
+                guard !hasAppeared else { return }
+                        hasAppeared = true
+                Task {
+                    await recommendationVM.fetchRecommendations()
+                }
+                favoritesVM.fetchAll() // bi bak
+                
             }
+            
+            .onChange(of: favoritesVM.needsRefresh) {
+                if favoritesVM.needsRefresh {
+                    Task {
+                        await recommendationVM.fetchRecommendations()
+                    }
+                    favoritesVM.needsRefresh = false
+                }
+            }
+
         }
     }
     
@@ -137,7 +128,7 @@ struct ContentView: View {
         if !MovieCache.shared.nowPlayingMovies.isEmpty,
            !MovieCache.shared.popularMovies.isEmpty,
            !MovieCache.shared.upcomingMovies.isEmpty {
-
+            
             moviesNowPlaying = MovieCache.shared.nowPlayingMovies
             moviesPopular = MovieCache.shared.popularMovies
             moviesUpcoming = MovieCache.shared.upcomingMovies
@@ -164,11 +155,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
 
-
+//#Preview {
+//    HomeView()
+//}
 

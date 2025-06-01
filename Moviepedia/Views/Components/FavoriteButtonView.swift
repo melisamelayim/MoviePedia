@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct FavoriteButtonView: View {
-    let movie: Movie
-    @ObservedObject var userMovieState: UserMovieState
+struct FavoriteButtonView<T: MovieRepresentable>: View {
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
+    let movie: T
     
     var body: some View {
         Button(action: {
-            userMovieState.toggleFavorite(for: movie)
+            favoritesVM.toggleFavorite(movieId: movie.id)
         }) {
             ZStack {
                 Circle()
@@ -21,11 +21,11 @@ struct FavoriteButtonView: View {
                     .frame(width: 40, height: 40)
                     .shadow(radius: 3)
                 
-                Image(systemName: userMovieState.isFavorite(movie) ? "heart.fill" : "heart")
+                Image(systemName: favoritesVM.isFavorite(movieId: movie.id) ? "heart.fill" : "heart")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 25, height: 25)
-                    .foregroundColor(userMovieState.isFavorite(movie) ? .red.opacity(0.7) : .black.opacity(0.5))
+                    .foregroundColor(favoritesVM.isFavorite(movieId: movie.id) ? .red.opacity(0.7) : .black.opacity(0.5))
             }
         }
         .buttonStyle(PlainButtonStyle()) // soft animation

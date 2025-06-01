@@ -8,23 +8,26 @@
 import SwiftUI
 
 struct BackdropCarouselView: View {
-    let movies: [Movie]
+    let movies: [DisplayMovie]
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
     
     var body: some View {
-        
         GeometryReader(content: { geometry in
             let size = geometry.size
             
             ScrollView(.horizontal) {
                 HStack(spacing: 5) {
-                    ForEach(0..<movies.count, id: \.self) { index in
+                    ForEach(movies) { movie in
                         NavigationLink(
-                                destination: MovieDetailView(movieId: movies[index].id, movieTitle: movies[index].title)
+                                destination: MovieDetailView(movieId: movie.id, movieTitle: movie.title)
+                                    .environmentObject(favoritesVM)
+
                         ) {
                             GeometryReader(content: { proxy in
                                 let cardSize = proxy.size
                                 
-                                BackdropCardView(movie: movies[index])
+                                BackdropCardView(displayMovie: movie)
+                                    .environmentObject(favoritesVM)
                                     .frame(width: cardSize.width, height: cardSize.height)
                                     .shadow(color: .black.opacity(0.25), radius: 10)
                             })
@@ -60,9 +63,10 @@ struct BackdropCarouselView: View {
     }
 }
 
-struct BackdropCarouselView_Previews: PreviewProvider {
+/*struct BackdropCarouselView_Previews: PreviewProvider {
     static var previews: some View {
         BackdropCarouselView(movies: Movie.stubbedMovies) // mock
             .background(Color.black.opacity(0.7)) 
     }
 }
+*/

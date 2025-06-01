@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct BackdropCardView: View {
-    let movie: Movie
+    let displayMovie: DisplayMovie
     
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
     @StateObject private var imageLoader = ImageLoader()
     
     var body: some View {
@@ -23,7 +22,7 @@ struct BackdropCardView: View {
                     .frame(width: UIScreen.main.bounds.width * 0.8, height: 175)
                     .cornerRadius(12)
                     .clipped()
-                Text(movie.title)
+                Text(displayMovie.title)
                     .font(.headline)
                     .foregroundColor(.black)
                     .padding(.top, 200)
@@ -32,25 +31,32 @@ struct BackdropCardView: View {
                     .frame(width: UIScreen.main.bounds.width * 0.85, height: 200)
                     .cornerRadius(12)
                     .overlay(
-                        Text(movie.title)
+                        Text(displayMovie.title)
                             .font(.headline)
                             .foregroundColor(.white)
                             .multilineTextAlignment(.center)
                     )
             }
+            WatchlistButtonView(movie: displayMovie)
+                .environmentObject(favoritesVM)
         }
-        .onAppear {
-            if let backdropURL = movie.backdropURL {
-                imageLoader.loadImage(with: backdropURL)
+        .onAppear{
+            if let url = displayMovie.posterURL {
+                imageLoader.loadImage(with: url)
+            } else {
+                print("backdrop url not accesible")
             }
         }
     }
 }
 
-struct BackdropCardView_Previews: PreviewProvider {
+
+
+/*struct BackdropCardView_Previews: PreviewProvider {
     static var previews: some View {
         BackdropCardView(movie: Movie.stubbedMovie)
             .frame(height: 160)
             .padding()
     }
 }
+*/

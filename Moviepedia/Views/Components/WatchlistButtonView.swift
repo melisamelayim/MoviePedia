@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct WatchlistButtonView: View {
-    let movie: Movie
-    @ObservedObject var userMovieState: UserMovieState
+struct WatchlistButtonView<T: MovieRepresentable>: View {
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
+    let movie: T
 
     var body: some View {
         Button(action: {
-            userMovieState.toggleWatchlist(for: movie)
+            favoritesVM.toggleWatchlist(movieId: movie.id)
         }) {
             ZStack {
                 Circle()
@@ -21,11 +21,11 @@ struct WatchlistButtonView: View {
                     .frame(width: 40, height: 40)
                     .shadow(radius: 3)
                 
-                Image(systemName: userMovieState.isInWatchlist(movie) ? "bookmark.fill" : "bookmark")
+                Image(systemName: favoritesVM.isInWatchlist(movieId: movie.id) ? "bookmark.fill" : "bookmark")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 25, height: 25)
-                    .foregroundColor(userMovieState.isInWatchlist(movie) ? .blue.opacity(0.8) : .black.opacity(0.5))
+                    .foregroundColor(favoritesVM.isInWatchlist(movieId: movie.id) ? .blue.opacity(0.8) : .black.opacity(0.5))
             }
         }
         .buttonStyle(PlainButtonStyle()) // soft animation

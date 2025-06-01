@@ -10,13 +10,18 @@ import Firebase
 
 @main
 struct MovieApp: App {
+    @StateObject var authVM = AuthViewModel()
+    @StateObject var favoritesVM = FavoritesViewModel()
+
     init() {
         FirebaseApp.configure()
         let firestoreManager = FirestoreService()
     }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppView()
+                .environmentObject(authVM)
+                .environmentObject(favoritesVM)
         }
     }
 }

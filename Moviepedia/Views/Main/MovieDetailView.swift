@@ -8,19 +8,24 @@
 import SwiftUI
 
 struct MovieDetailView: View {
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
+    @StateObject private var movieDetailState = MovieDetailState()
     
     let movieId: Int
     let movieTitle: String
-    @StateObject private var movieDetailState = MovieDetailState()
+    
     @State private var selectedTrailerURL: URL?
     
     var body: some View {
         List {
             if let movie = movieDetailState.movie {
-                MovieDetailImage(imageURL: movie.backdropURL!)
+                MovieDetailImage(imageURL: movie.backdropURL!) // burası sorunlu. ! kalkmalı
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     .listRowSeparator(.hidden)
-                
+                WatchlistButtonView(movie: movie)
+                    .environmentObject(favoritesVM)
+                FavoriteButtonView(movie: movie)
+                    .environmentObject(favoritesVM)
                 MovieDetailListView(movie: movie, selectedTrailerURL: $selectedTrailerURL)
             }
         }
@@ -65,7 +70,7 @@ struct MovieDetailListView: View {
         HStack(alignment: .top, spacing: 4) {
             if let cast = movie.cast, !cast.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Starring").font(.headline)
+                    Text("Oyuncular").font(.headline)
                     ForEach(cast.prefix(9)) { Text($0.name) }
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
@@ -76,18 +81,18 @@ struct MovieDetailListView: View {
             if let crew = movie.crew, !crew.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
                     if let directors = movie.directors, !directors.isEmpty {
-                        Text("Director(s)").font(.headline)
+                        Text("Yönetmen(ler)").font(.headline)
                         ForEach(directors.prefix(2)) { Text($0.name) }
                     }
                     
                     if let producers = movie.producers, !producers.isEmpty {
-                        Text("Producer(s)").font(.headline)
+                        Text("Yapımcı(lar)").font(.headline)
                             .padding(.top)
                         ForEach(producers.prefix(2)) { Text($0.name) }
                     }
                     
                     if let screenwriters = movie.screenWriters, !screenwriters.isEmpty {
-                        Text("Screenwriter(s)").font(.headline)
+                        Text("Yazar(lar)").font(.headline)
                             .padding(.top)
                         ForEach(screenwriters.prefix(2)) { Text($0.name) }
                     }
