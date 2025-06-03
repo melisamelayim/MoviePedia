@@ -10,6 +10,7 @@ import SwiftUI
 struct BackdropCarouselView: View {
     let movies: [DisplayMovie]
     @EnvironmentObject var favoritesVM: FavoritesViewModel
+    @EnvironmentObject var recommendationVM: RecommendationViewModel
     
     var body: some View {
         GeometryReader(content: { geometry in
@@ -21,6 +22,7 @@ struct BackdropCarouselView: View {
                         NavigationLink(
                                 destination: MovieDetailView(movieId: movie.id, movieTitle: movie.title)
                                     .environmentObject(favoritesVM)
+                                    .environmentObject(recommendationVM)
 
                         ) {
                             GeometryReader(content: { proxy in

@@ -43,7 +43,7 @@ struct PosterCardView: View {
             if let url = movie.posterURL {
                 imageLoader.loadImage(with: url)
             } else {
-                print("Poster URL not accessible.")
+                print("Poster URL not accessible.") // cache ile ilgili bi problem gibi gozukuyor, halledersin
             }
         }
     }

@@ -41,7 +41,7 @@ struct BackdropCardView: View {
                 .environmentObject(favoritesVM)
         }
         .onAppear{
-            if let url = displayMovie.posterURL {
+            if let url = displayMovie.backdropURL {
                 imageLoader.loadImage(with: url)
             } else {
                 print("backdrop url not accesible")

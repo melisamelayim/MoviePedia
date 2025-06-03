@@ -12,6 +12,7 @@ import Firebase
 struct MovieApp: App {
     @StateObject var authVM = AuthViewModel()
     @StateObject var favoritesVM = FavoritesViewModel()
+    @StateObject var recommendationVM = RecommendationViewModel()
 
     init() {
         FirebaseApp.configure()
@@ -22,6 +23,7 @@ struct MovieApp: App {
             AppView()
                 .environmentObject(authVM)
                 .environmentObject(favoritesVM)
+                .environmentObject(recommendationVM)
         }
     }
 }

@@ -11,6 +11,7 @@ import Firebase
 struct AppView: View {
     @EnvironmentObject var authVM: AuthViewModel
     @EnvironmentObject var favoritesVM: FavoritesViewModel
+    @EnvironmentObject var recommendationVM: RecommendationViewModel
     
     var body: some View {
         Group {

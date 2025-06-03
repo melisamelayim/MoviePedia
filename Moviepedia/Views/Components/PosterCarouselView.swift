@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PosterCarouselView: View {
     @EnvironmentObject var favoritesVM: FavoritesViewModel
+    @EnvironmentObject var recommendationVM: RecommendationViewModel
+    
     let movies: [Movie]
 
     @State private var currentIndex: Int = 0
@@ -22,6 +24,8 @@ struct PosterCarouselView: View {
                             NavigationLink(
                                     destination: MovieDetailView(movieId: movies[index].id, movieTitle: movies[index].title)
                                         .environmentObject(favoritesVM)
+                                        .environmentObject(recommendationVM)
+                                    
 
                             ) {
                                 GeometryReader { innerGeometry in
@@ -34,7 +38,7 @@ struct PosterCarouselView: View {
                                 }
                                 .frame(width: 130, height: 220)
                             }
-                            .frame(width: 120, height: 220)
+                            .frame(width: 120, height: 220) // bu ne la, neyin bu
                         }
                     }
                     .scrollTargetLayout()
@@ -59,7 +63,4 @@ struct PosterCarouselView: View {
     }
 }
     
-#Preview {
-    PosterCarouselView(movies: Movie.stubbedMovies)
-        .environmentObject(FavoritesViewModel())
-}
+

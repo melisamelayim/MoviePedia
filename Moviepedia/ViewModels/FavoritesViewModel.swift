@@ -49,6 +49,7 @@ class FavoritesViewModel: ObservableObject { // used observableobject so views a
         ? [field: FieldValue.arrayUnion([movieId])]
         : [field: FieldValue.arrayRemove([movieId])]
         
+        
         ref.setData(operation, merge: true) { error in
             if let error = error {
                 print("firestore update error: \(error.localizedDescription)")
@@ -73,8 +74,6 @@ class FavoritesViewModel: ObservableObject { // used observableobject so views a
             return
         }
 
-        print("📡 fetchFavorites çağrıldı")
-
         let ref = db.collection("users").document(userId)
         ref.getDocument { snapshot, error in
             if let error = error {
@@ -86,7 +85,7 @@ class FavoritesViewModel: ObservableObject { // used observableobject so views a
                let ids = data["favorites"] as? [Int] {
                 DispatchQueue.main.async {
                     self.favoriteMovies = Set(ids)
-                    print("favoriler geldi: \(ids.count) film")
+                    print("favoriler: \(ids.count) film")
                 }
             } else {
                 print("favoriler boş")
@@ -101,7 +100,7 @@ class FavoritesViewModel: ObservableObject { // used observableobject so views a
             return
         }
 
-        print("fetchWatchlist çağrıldı")
+        print("fetchWatchlist called")
 
         let ref = db.collection("users").document(userId)
         ref.getDocument { snapshot, error in
@@ -114,7 +113,7 @@ class FavoritesViewModel: ObservableObject { // used observableobject so views a
                let ids = data["watchlist"] as? [Int] {
                 DispatchQueue.main.async {
                     self.watchlistMovies = Set(ids)
-                    print("watchlist geldi: \(ids.count) film")
+                    print("watchlist: \(ids.count) film")
                 }
             } else {
                 print("watchlist boş")

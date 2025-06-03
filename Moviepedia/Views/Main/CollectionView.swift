@@ -22,9 +22,9 @@ struct CollectionView: View {
     @State private var hasAppeared = false
 
     private let columns = [
-        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 15),
-        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 15),
-        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 15)
+        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 10),
+        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 10),
+        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 10)
     ]
     
     var body: some View {
@@ -62,7 +62,7 @@ struct CollectionView: View {
             
             .onChange(of: favoritesVM.needsRefresh) {
                 if favoritesVM.needsRefresh {
-                    favoritesVM.fetchAll()
+                    //favoritesVM.fetchAll()
                     Task {
                         await loadMoviesFromIDs()
                     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var favoritesVM: FavoritesViewModel
-    @StateObject private var recommendationVM = RecommendationViewModel()
+    @EnvironmentObject var recommendationVM: RecommendationViewModel
         
     @State private var moviesNowPlaying: [Movie] = []
     @State private var moviesPopular: [Movie] = []
@@ -37,6 +37,7 @@ struct HomeView: View {
                                     .padding(.top, 10)
                                 
                                 BackdropCarouselView(movies: recommendationVM.recommendedMovies)
+                                    .environmentObject(recommendationVM)
                                 
                                     .padding(.top, -10)
                             }
@@ -49,8 +50,6 @@ struct HomeView: View {
                             .padding(.top, 10)
                         
                         PosterCarouselView(movies: moviesNowPlaying)
-                            
-                        
                         
                         Text("Popüler")
                             .font(.title)
@@ -94,10 +93,11 @@ struct HomeView: View {
                         await loadMovies()
                     }
                 }
+                
                 guard !hasAppeared else { return }
                         hasAppeared = true
                 Task {
-                    await recommendationVM.fetchRecommendations()
+                    recommendationVM.listenToRecommendations()
                 }
                 favoritesVM.fetchAll() // bi bak
                 
@@ -105,12 +105,18 @@ struct HomeView: View {
             
             .onChange(of: favoritesVM.needsRefresh) {
                 if favoritesVM.needsRefresh {
+                    print("refreshed homeview")
                     Task {
-                        await recommendationVM.fetchRecommendations()
+                        recommendationVM.listenToRecommendations()
                     }
                     favoritesVM.needsRefresh = false
                 }
             }
+            
+            .onDisappear {
+                recommendationVM.detachListener()
+            }
+
 
         }
     }

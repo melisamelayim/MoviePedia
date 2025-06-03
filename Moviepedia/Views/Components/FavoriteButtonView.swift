@@ -9,11 +9,19 @@ import SwiftUI
 
 struct FavoriteButtonView<T: MovieRepresentable>: View {
     @EnvironmentObject var favoritesVM: FavoritesViewModel
+    @EnvironmentObject var recommendationVM: RecommendationViewModel
+    
     let movie: T
     
+
     var body: some View {
         Button(action: {
             favoritesVM.toggleFavorite(movieId: movie.id)
+            print("🧠 updateRecommendations triggered?")
+            Task {
+                await recommendationVM.sendFavoriteIdsToBackend(favoriteIds: Array(favoritesVM.favoriteMovies))
+            }
+            
         }) {
             ZStack {
                 Circle()
