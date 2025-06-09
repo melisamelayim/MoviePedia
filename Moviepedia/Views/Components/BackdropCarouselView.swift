@@ -13,62 +13,61 @@ struct BackdropCarouselView: View {
     @EnvironmentObject var recommendationVM: RecommendationViewModel
     
     var body: some View {
-        GeometryReader(content: { geometry in
-            let size = geometry.size
+        GeometryReader { geometry in
+            let screenWidth = geometry.size.width
+            let screenHeight = geometry.size.height
+            let cardWidth = screenWidth * 0.9
+            let cardHeight = screenHeight * 0.9
             
-            ScrollView(.horizontal) {
-                HStack(spacing: 5) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 20) {
                     ForEach(movies) { movie in
                         NavigationLink(
-                                destination: MovieDetailView(movieId: movie.id, movieTitle: movie.title)
-                                    .environmentObject(favoritesVM)
-                                    .environmentObject(recommendationVM)
-
+                            destination: MovieDetailView(movieId: movie.id, movieTitle: movie.title)
+                                .environmentObject(favoritesVM)
+                                .environmentObject(recommendationVM)
                         ) {
-                            GeometryReader(content: { proxy in
-                                let cardSize = proxy.size
+                            GeometryReader { proxy in
+                                let offset = getParallaxOffset(proxy: proxy, geometry: geometry)
                                 
                                 BackdropCardView(displayMovie: movie)
                                     .environmentObject(favoritesVM)
-                                    .frame(width: cardSize.width, height: cardSize.height)
-                                    .shadow(color: .black.opacity(0.25), radius: 10)
-                            })
-                            .frame(width: size.width - 60, height: size.height - 50)
-                        }
-                        .scrollTransition(.interactive, axis: .horizontal) {
-                            view, phase in
-                            view
-                                .scaleEffect(phase.isIdentity ? 1 : 0.95)
+                                    .frame(width: cardWidth, height: cardHeight)
+                                    .offset(x: offset)
+                                    .scaleEffect(getScale(proxy: proxy, geometry: geometry))
+                                    .animation(.easeInOut(duration: 0.3), value: offset)
+                            }
+                            .frame(width: cardWidth, height: cardHeight)
                         }
                     }
                 }
-                .padding(.horizontal, 30)
                 .scrollTargetLayout()
-                .frame(height: size.height, alignment: .top)
+                .padding(.horizontal, (screenWidth - cardWidth) / 2) // Kenarlara eşit boşluk
             }
             .scrollTargetBehavior(.viewAligned)
-        })
-        .frame(height: 300)
-        .padding(.horizontal, -15)
-        .padding(.top, -20)
-        
-        .padding(5)
+        }
+        .frame(height: 250) // Carousel yüksekliği
     }
     
     private func getParallaxOffset(proxy: GeometryProxy, geometry: GeometryProxy) -> CGFloat {
-        let midPoint = geometry.size.width / 2
-        let cardMidX = proxy.frame(in: .global).midX
-        let distance = abs(midPoint - cardMidX)
-        let maxDistance = geometry.size.width / 2
-        let offset = -(distance / maxDistance) * 20
-        return offset
+        let screenWidth = geometry.size.width
+        let midX = proxy.frame(in: .global).midX
+        let center = screenWidth / 2
+        let distance = midX - center
+        let parallaxStrength: CGFloat = 0.2 // Oranını ayarla
+        return -distance * parallaxStrength
+    }
+    
+    private func getScale(proxy: GeometryProxy, geometry: GeometryProxy) -> CGFloat {
+        let screenWidth = geometry.size.width
+        let midX = proxy.frame(in: .global).midX
+        let center = screenWidth / 2
+        let distance = abs(center - midX)
+        let maxDistance = screenWidth / 2
+        let scale = max(0.9, 1 - (distance / maxDistance) * 0.1)
+        return scale
     }
 }
 
-/*struct BackdropCarouselView_Previews: PreviewProvider {
-    static var previews: some View {
-        BackdropCarouselView(movies: Movie.stubbedMovies) // mock
-            .background(Color.black.opacity(0.7)) 
-    }
-}
-*/
+
+

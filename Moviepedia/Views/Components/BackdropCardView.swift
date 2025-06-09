@@ -24,7 +24,7 @@ struct BackdropCardView: View {
                     .clipped()
                 Text(displayMovie.title)
                     .font(.headline)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                     .padding(.top, 200)
             } else {
                 Color.gray.opacity(0.3)

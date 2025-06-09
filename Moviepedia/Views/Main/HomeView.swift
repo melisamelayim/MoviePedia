@@ -22,125 +22,110 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    if isLoading {
-                        ProgressView("Yükleniyor...")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                    } else {
-                        if !recommendationVM.recommendedMovies.isEmpty {
-                            VStack(alignment: .leading) {
-                                Text("Senin İçin Önerilenler")
-                                    .font(.title)
-                                    .bold()
-                                    .padding(.horizontal, 20)
-                                    .padding(.top, 10)
-                                
-                                BackdropCarouselView(movies: recommendationVM.recommendedMovies)
-                                    .environmentObject(recommendationVM)
-                                
-                                    .padding(.top, -10)
-                            }
-                        }
-                        
-                        Text("Vizyonda")
-                            .font(.title)
-                            .bold()
-                            .padding(.horizontal, 20)
-                            .padding(.top, 10)
-                        
-                        PosterCarouselView(movies: moviesNowPlaying)
-                        
-                        Text("Popüler")
-                            .font(.title)
-                            .bold()
-                            .padding(.horizontal, 20)
-                            .padding(.top, -85)
+                VStack(alignment: .leading) {
+                    if !recommendationVM.recommendedMovies.isEmpty {
+                        VStack(alignment: .leading) {
+                            Text("Hoşgeldin, User") // fixle burayı :)
+                                .foregroundStyle(.white)
+                                .font(.title)
+                                .bold()
+                                .padding(.horizontal, 20)
                             
-                        
-                        PosterCarouselView(movies: moviesPopular)
-                            .padding(.top, -50)
-                        
-                        
-                        
-                        Text("Yakında")
-                            .font(.title)
-                            .bold()
-                            .padding(.top, -85)
-                            .padding(.horizontal, 20)
-                        
-                        PosterCarouselView(movies: moviesUpcoming)
-                            .padding(.top, -50)
-                        
+                            Text("Bunları beğenebileceğini düşündük")
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 20)
+                            
+                            BackdropCarouselView(movies: recommendationVM.recommendedMovies)
+                                .environmentObject(recommendationVM)
+                                .padding(.top, -10)
+                            
+                        }
+                        .padding(.top, 50)
+                        .background(
+                            Color(UIColor.systemGray).brightness(-0.4)
+                                .ignoresSafeArea(edges: .top)
+                        )
                     }
+                    
+                    
+                    Text("Vizyonda")
+                        .font(.title)
+                        .bold()
+                        .padding(.horizontal, 20)
+                    
+                    PosterCarouselView(movies: moviesNowPlaying)
+                    
+                    Text("Popüler")
+                        .font(.title)
+                        .bold()
+                        .padding(.horizontal, 20)
+                                        
+                    PosterCarouselView(movies: moviesPopular)
+                    
+                    Text("Yakında")
+                        .font(.title)
+                        .bold()
+                        .padding(.horizontal, 20)
+                    
+                    PosterCarouselView(movies: moviesUpcoming)
                     
                 }
             }
-            .background(Color.pink.opacity(0.2).edgesIgnoringSafeArea(.all))
-            .navigationTitle("Moviepedia")
-            .onAppear {
-                let appearance = UINavigationBarAppearance()
-                appearance.configureWithTransparentBackground()
-                appearance.backgroundColor = UIColor.white
-                appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
-                UINavigationBar.appearance().standardAppearance = appearance
-                UINavigationBar.appearance().scrollEdgeAppearance = appearance
-                
-                if useMockData {
-                    loadMockData()
-                } else {
-                    Task {
-                        await loadMovies()
-                    }
+            .ignoresSafeArea(edges: .top)
+        }
+        
+        .onAppear {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithTransparentBackground()
+            appearance.backgroundColor = UIColor.white
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+            
+            
+            if !MovieCache.shared.isMoviesLoaded {
+                Task {
+                    print("çekme 2 (load movies yollandı)")
+                    await loadMovies()
+                    MovieCache.shared.isMoviesLoaded = true
                 }
-                
-                guard !hasAppeared else { return }
-                        hasAppeared = true
+            } else {
+                // cache'den oku
+                print("cacheden okuduuu")
+                if !MovieCache.shared.nowPlayingMovies.isEmpty,
+                   !MovieCache.shared.popularMovies.isEmpty,
+                   !MovieCache.shared.upcomingMovies.isEmpty {
+                    
+                    moviesNowPlaying = MovieCache.shared.nowPlayingMovies
+                    moviesPopular = MovieCache.shared.popularMovies
+                    moviesUpcoming = MovieCache.shared.upcomingMovies
+                }
+                isLoading = false
+            }
+            
+            Task {
+                recommendationVM.listenToRecommendations()
+            }
+        }
+        
+        .onChange(of: favoritesVM.needsRefresh) {
+            if favoritesVM.needsRefresh {
+                print("refreshed homeview")
                 Task {
                     recommendationVM.listenToRecommendations()
                 }
-                favoritesVM.fetchAll() // bi bak
-                
+                favoritesVM.needsRefresh = false
             }
-            
-            .onChange(of: favoritesVM.needsRefresh) {
-                if favoritesVM.needsRefresh {
-                    print("refreshed homeview")
-                    Task {
-                        recommendationVM.listenToRecommendations()
-                    }
-                    favoritesVM.needsRefresh = false
-                }
-            }
-            
-            .onDisappear {
-                recommendationVM.detachListener()
-            }
-
-
         }
-    }
-    
-    private func loadMockData() {
-        moviesNowPlaying = Movie.stubbedMovies
-        moviesPopular = Movie.stubbedMovies
+        
+        .onDisappear {
+            recommendationVM.detachListener()
+        }
     }
     
     private func loadMovies() async {
         isLoading = true
         defer { isLoading = false }
-        
-        // if cache is usable
-        if !MovieCache.shared.nowPlayingMovies.isEmpty,
-           !MovieCache.shared.popularMovies.isEmpty,
-           !MovieCache.shared.upcomingMovies.isEmpty {
-            
-            moviesNowPlaying = MovieCache.shared.nowPlayingMovies
-            moviesPopular = MovieCache.shared.popularMovies
-            moviesUpcoming = MovieCache.shared.upcomingMovies
-            return
-        }
-        
         // if cache didn't work or first try
         do {
             let movieService = MovieAPIClient.sharedInstance
@@ -160,9 +145,3 @@ struct HomeView: View {
         }
     }
 }
-
-
-//#Preview {
-//    HomeView()
-//}
-

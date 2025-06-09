@@ -24,7 +24,7 @@ struct PosterCardView: View {
                     .resizable()
                     .scaledToFill()
                     .cornerRadius(8)
-                    .shadow(radius: 8)
+                    
             } else {
                 if showTitle {
                     Text(movie.title)

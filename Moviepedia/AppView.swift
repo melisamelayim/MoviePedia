@@ -18,6 +18,7 @@ struct AppView: View {
             if authVM.isLoggedIn {
                 MainTabView()
                     .onAppear {
+                        print("favori ve watchlistler çekildi")
                         favoritesVM.fetchAll()
                     }
             } else {

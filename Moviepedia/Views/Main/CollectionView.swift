@@ -3,7 +3,7 @@
 //  Moviepedia
 //
 //  Created by Missy on 22.05.2025.
-//
+// melisamelayim@gmail.com
 
 import SwiftUI
 
@@ -22,9 +22,9 @@ struct CollectionView: View {
     @State private var hasAppeared = false
 
     private let columns = [
-        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 10),
-        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 10),
-        GridItem(.flexible(minimum: 100, maximum: 160), spacing: 10)
+        GridItem(),
+        GridItem(),
+        GridItem()
     ]
     
     var body: some View {
@@ -36,25 +36,28 @@ struct CollectionView: View {
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                .padding()
                 
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 15) {
+                    LazyVGrid(columns: columns) {
                         ForEach(moviesToShow, id: \.id) { movie in
-                            PosterCardView(movie: movie)
-                                .environmentObject(favoritesVM)
-                                .frame(height: 160) 
+                            NavigationLink(
+                                destination: MovieDetailView(movieId: movie.id, movieTitle: movie.title)
+                                    .environmentObject(favoritesVM)
+                            ) {
+                                PosterCardView(movie: movie)
+                                    .environmentObject(favoritesVM)
+                                    
+                            }
+                            
                         }
                     }
-                    .padding(.horizontal, 15)
+                    .padding()
                 }
+                
             }
             .navigationTitle("Koleksiyonum")
+            
             .onAppear {
-                guard !hasAppeared else { return }
-                hasAppeared = true
-
-                favoritesVM.fetchAll()
                 Task {
                     await loadMoviesFromIDs()
                 }
@@ -62,7 +65,7 @@ struct CollectionView: View {
             
             .onChange(of: favoritesVM.needsRefresh) {
                 if favoritesVM.needsRefresh {
-                    //favoritesVM.fetchAll()
+                    favoritesVM.fetchAll()
                     Task {
                         await loadMoviesFromIDs()
                     }
