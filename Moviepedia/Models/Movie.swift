@@ -20,6 +20,7 @@ struct Movie: Decodable {
     let backdropPath: String?
     let posterPath: String?
     let overview: String
+    let tagline: String?
     let voteAverage: Double
     let voteCount: Int
     let runtime: Int?
@@ -54,7 +55,10 @@ struct Movie: Decodable {
     }()
     
     var genreText: String {
-        genres?.first?.name ?? "n/a"
+        guard let genres = genres, !genres.isEmpty else {
+            return "n/a"
+        }
+        return genres.map { $0.name }.joined(separator: " · ")
     }
     
     var ratingText: String {
@@ -129,6 +133,12 @@ struct MovieCast: Decodable, Identifiable {
     let id: Int
     let character: String
     let name: String
+    let profilePath: String?
+
+    var profileImageURL: URL? {
+        guard let path = profilePath else { return nil }
+        return URL(string: "https://image.tmdb.org/t/p/w185\(path)")
+    }
 }
 
 struct MovieCrew: Decodable, Identifiable {

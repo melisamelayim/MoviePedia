@@ -22,10 +22,23 @@ struct BackdropCardView: View {
                     .frame(width: UIScreen.main.bounds.width * 0.8, height: 175)
                     .cornerRadius(12)
                     .clipped()
+                
                 Text(displayMovie.title)
                     .font(.headline)
                     .foregroundColor(.white)
-                    .padding(.top, 200)
+                    .padding(.top, 220)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                
+                Text(displayMovie.tagline)
+                    .padding(.top, 260)
+                    .padding(.horizontal, 20)
+                    .font(.footnote)
+                    .foregroundColor(.white)
+                    .lineLimit(nil) // Çok satıra yayılsın                    
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                
             } else {
                 Color.gray.opacity(0.3)
                     .frame(width: UIScreen.main.bounds.width * 0.85, height: 200)

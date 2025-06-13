@@ -9,7 +9,7 @@ import Foundation
 
 protocol MovieRepresentable {
     var id: Int { get }
-    var title: String { get }
+    var title: String { get }    
     var backdropPath: String? { get }
 }
 

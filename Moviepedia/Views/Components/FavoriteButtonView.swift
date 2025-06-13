@@ -13,7 +13,6 @@ struct FavoriteButtonView<T: MovieRepresentable>: View {
     
     let movie: T
     
-
     var body: some View {
         Button(action: {
             favoritesVM.toggleFavorite(movieId: movie.id)

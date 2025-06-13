@@ -46,7 +46,7 @@ struct BackdropCarouselView: View {
             }
             .scrollTargetBehavior(.viewAligned)
         }
-        .frame(height: 250) // Carousel yüksekliği
+        .frame(height: 320) // Carousel yüksekliği
     }
     
     private func getParallaxOffset(proxy: GeometryProxy, geometry: GeometryProxy) -> CGFloat {

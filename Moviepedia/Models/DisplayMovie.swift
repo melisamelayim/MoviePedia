@@ -10,6 +10,7 @@ import Foundation
 struct DisplayMovie: Identifiable {
     let id: Int
     let title: String
+    let tagline: String    
     let backdropPath: String?
 
     var backdropURL: URL? {

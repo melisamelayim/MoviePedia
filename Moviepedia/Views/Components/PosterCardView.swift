@@ -10,9 +10,10 @@ import SwiftUI
 struct PosterCardView: View {
     @EnvironmentObject var favoritesVM: FavoritesViewModel
     @StateObject private var imageLoader = ImageLoader()
-    
+        
     let movie: Movie
     var showTitle: Bool = true
+    var showWatchlistButton: Bool = true
     
     var body: some View {        
         ZStack(alignment: .topTrailing) {
@@ -34,10 +35,12 @@ struct PosterCardView: View {
                         .font(.headline)                    
                 }
             }
-            WatchlistButtonView(movie: movie)
-                .environmentObject(favoritesVM)
-                .padding(8)
-                .frame(alignment: .topLeading)
+            if showWatchlistButton {
+                WatchlistButtonView(movie: movie)
+                    .environmentObject(favoritesVM)
+                    .padding(8)
+                    .frame(alignment: .topLeading)
+            }
         }
         .onAppear {
             if let url = movie.posterURL {

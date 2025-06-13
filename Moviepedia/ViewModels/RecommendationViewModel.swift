@@ -44,6 +44,7 @@ class RecommendationViewModel: ObservableObject {
                 let data = doc.data()
                 guard
                     let title = data["title"] as? String,
+                    let tagline = data["tagline"] as? String,
                     let backdropPath = data["backdropPath"] as? String
                 else {
                     print("Recommendation bulunamadı")
@@ -53,6 +54,7 @@ class RecommendationViewModel: ObservableObject {
                 return DisplayMovie(
                     id: Int(doc.documentID) ?? -1,
                     title: title,
+                    tagline: tagline,
                     backdropPath: backdropPath
                 )
             }
